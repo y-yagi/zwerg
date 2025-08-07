@@ -1,0 +1,60 @@
+# Zwerg Configuration File
+# This file defines which directories to watch and what actions to take when files change
+
+watches:
+  # Watch a source directory for Ruby files
+  - path: "./src"
+    recursive: true
+    patterns:
+      - "*.rb"
+      - "*.yml"
+    actions:
+      - type: "command"
+        command: "echo 'Ruby/YAML file changed: {{file_name}}' >> ./logs/changes.log"
+      - type: "command"
+        command: "rubocop {{file_path}}"
+
+  # Watch a documentation directory
+  - path: "./docs"
+    recursive: true
+    patterns:
+      - "*.md"
+      - "*.txt"
+    actions:
+      - type: "command"
+        command: "echo 'Documentation updated: {{file_path}}'"
+      - type: "command"
+        command: "cp {{file_path}} ./backup/docs/"
+
+  # Watch configuration files in the root directory
+  - path: "."
+    recursive: false
+    patterns:
+      - "*.yml"
+      - "*.yaml"
+      - "*.json"
+    actions:
+      - type: "command"
+        command: "echo '[{{event_type}}] Config file changed: {{file_name}}'"
+      - type: "command"
+        command: "echo 'Config changed: {{file_path}}' | mail -s 'Config Alert' admin@example.com"
+
+  # Watch for log files and compress them when they get large
+  - path: "./logs"
+    recursive: false
+    patterns:
+      - "*.log"
+    actions:
+      - type: "command"
+        command: "if [ $(stat -c%s {{file_path}}) -gt 1048576 ]; then gzip {{file_path}}; fi"
+
+# Available action type:
+# - command: Execute a shell command
+
+# Available variables for substitution:
+# - {{file_path}}: Full path to the changed file
+# - {{file_dir}}: Directory containing the file
+# - {{file_name}}: Name of the file (including extension)
+# - {{file_base}}: Name of the file without extension
+# - {{file_ext}}: File extension (including the dot)
+# - {{event_type}}: Type of event (create, modify, remove, access)

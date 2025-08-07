@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require "zwerg"
+
+config_file = ARGV[0] || "zwerg.yml"
+
+begin
+  Zwerg.start(config_file)
+rescue Zwerg::Error => e
+  puts "Error: #{e.message}"
+  exit 1
+rescue Interrupt
+  puts "\nGoodbye!"
+  exit 0
+end
