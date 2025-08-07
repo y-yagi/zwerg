@@ -9,7 +9,8 @@ module Zwerg
   class Error < StandardError; end
 
   class << self
-    def start(config_file = "zwerg.yml")
+    def start(config_file)
+      config_file ||= "zwerg.yml"
       config = Config.load(config_file)
       watcher = Watcher.new(config)
       watcher.start

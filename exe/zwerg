@@ -2,10 +2,8 @@
 
 require "zwerg"
 
-config_file = ARGV[0] || "zwerg.yml"
-
 begin
-  Zwerg.start(config_file)
+  Zwerg.start(ARGV[0])
 rescue Zwerg::Error => e
   puts "Error: #{e.message}"
   exit 1
