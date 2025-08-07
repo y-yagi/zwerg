@@ -44,10 +44,8 @@ watches:
       - "*.rb"
       - "*.yml"
     actions:
-      - type: "command"
-        command: "echo 'Ruby file changed: {{file_name}}'"
-      - type: "command"
-        command: "rubocop {{file_path}}"
+      - command: "echo 'Ruby file changed: {{file_name}}'"
+      - command: "rubocop {{file_path}}"
 ```
 
 2. Run Zwerg:
@@ -68,19 +66,16 @@ Each watch entry can have the following properties:
 - `patterns`: Array of glob patterns to match files (optional, matches all if empty)
 - `actions`: Array of actions to execute when files change (required)
 
-### Action Types
+### Action Configuration
 
-#### Command
-Execute a shell command:
+Each action is simply a shell command:
 ```yaml
-- type: "command"
-  command: "echo 'File changed: {{file_path}}'"
+- command: "echo 'File changed: {{file_path}}'"
 ```
 
 You can use any shell command, including complex operations with pipes, redirection, and conditional logic:
 ```yaml
-- type: "command"
-  command: "if [ -f {{file_path}} ]; then echo 'File exists: {{file_name}}' >> changes.log; fi"
+- command: "if [ -f {{file_path}} ]; then echo 'File exists: {{file_name}}' >> changes.log; fi"
 ```
 
 ### Variable Substitution

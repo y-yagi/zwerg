@@ -12,12 +12,7 @@ module Zwerg
     end
 
     def execute(action)
-      case action["type"]
-      when "command"
-        execute_command(action)
-      else
-        puts "Unsupported action type: #{action['type']}. Only 'command' type is supported."
-      end
+      execute_command(action)
     rescue => e
       puts "Error executing action #{action}: #{e.message}"
     end

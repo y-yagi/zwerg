@@ -9,10 +9,8 @@ watches:
       - "*.rb"
       - "*.yml"
     actions:
-      - type: "command"
-        command: "echo 'Ruby/YAML file changed: {{file_name}}' >> ./logs/changes.log"
-      - type: "command"
-        command: "rubocop {{file_path}}"
+      - command: "echo 'Ruby/YAML file changed: {{file_name}}' >> ./logs/changes.log"
+      - command: "rubocop {{file_path}}"
 
   # Watch a documentation directory
   - path: "./docs"
@@ -21,10 +19,8 @@ watches:
       - "*.md"
       - "*.txt"
     actions:
-      - type: "command"
-        command: "echo 'Documentation updated: {{file_path}}'"
-      - type: "command"
-        command: "cp {{file_path}} ./backup/docs/"
+      - command: "echo 'Documentation updated: {{file_path}}'"
+      - command: "cp {{file_path}} ./backup/docs/"
 
   # Watch configuration files in the root directory
   - path: "."
@@ -34,10 +30,8 @@ watches:
       - "*.yaml"
       - "*.json"
     actions:
-      - type: "command"
-        command: "echo '[{{event_type}}] Config file changed: {{file_name}}'"
-      - type: "command"
-        command: "echo 'Config changed: {{file_path}}' | mail -s 'Config Alert' admin@example.com"
+      - command: "echo '[{{event_type}}] Config file changed: {{file_name}}'"
+      - command: "echo 'Config changed: {{file_path}}' | mail -s 'Config Alert' admin@example.com"
 
   # Watch for log files and compress them when they get large
   - path: "./logs"
@@ -45,11 +39,9 @@ watches:
     patterns:
       - "*.log"
     actions:
-      - type: "command"
-        command: "if [ $(stat -c%s {{file_path}}) -gt 1048576 ]; then gzip {{file_path}}; fi"
+      - command: "if [ $(stat -c%s {{file_path}}) -gt 1048576 ]; then gzip {{file_path}}; fi"
 
-# Available action type:
-# - command: Execute a shell command
+# Each action is a shell command that will be executed when files change
 
 # Available variables for substitution:
 # - {{file_path}}: Full path to the changed file

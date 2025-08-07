@@ -20,8 +20,7 @@ class TestZwerg < Minitest::Test
             patterns:
               - "*.txt"
             actions:
-              - type: "command"
-                command: "echo 'Test file changed: {{file_name}}'"
+              - command: "echo 'Test file changed: {{file_name}}'"
       YAML
 
       File.write(config_file, config_content)
@@ -32,7 +31,7 @@ class TestZwerg < Minitest::Test
       assert_equal true, config.watches.first[:recursive]
       assert_equal ["*.txt"], config.watches.first[:patterns]
       assert_equal 1, config.watches.first[:actions].length
-      assert_equal "command", config.watches.first[:actions].first["type"]
+      assert config.watches.first[:actions].first.has_key?("command")
     end
   end
 
