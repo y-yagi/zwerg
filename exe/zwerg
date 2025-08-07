@@ -2,8 +2,59 @@
 
 require "zwerg"
 
+def show_help
+  puts <<~HELP
+    Zwerg - A configurable file watcher that executes commands based on YAML configuration
+
+    USAGE:
+        zwerg [CONFIG_FILE] [OPTIONS]
+
+    ARGUMENTS:
+        CONFIG_FILE    Path to YAML configuration file (default: zwerg.yml)
+
+    OPTIONS:
+        -h, --help     Show this help message
+
+    EXAMPLES:
+        zwerg                    # Use default zwerg.yml config
+        zwerg my_config.yml      # Use custom config file
+        zwerg --help             # Show this help
+
+    CONFIGURATION:
+        Create a YAML file with the following structure:
+
+        watches:
+          - path: "./src"
+            recursive: true
+            patterns:
+              - "*.rb"
+              - "*.yml"
+            actions:
+              - command: "echo 'File changed: {{file_name}}'"
+              - command: "rubocop {{file_path}}"
+
+    AVAILABLE VARIABLES:
+        {{file_path}}   Full path to the changed file
+        {{file_dir}}    Directory containing the file
+        {{file_name}}   Name of the file (including extension)
+        {{file_base}}   Name of the file without extension
+        {{file_ext}}    File extension (including the dot)
+        {{event_type}}  Type of event (create, modify, remove, access)
+
+    For more information, visit: https://github.com/y-yagi/zwerg
+  HELP
+end
+
+# Check for help flag
+if ARGV.include?("-h") || ARGV.include?("--help")
+  show_help
+  exit 0
+end
+
+config_file = ARGV.find { |arg| !arg.start_with?("-") } || "zwerg.yml"
+
 begin
-  Zwerg.start(ARGV[0])
+  Zwerg.start(config_file)
 rescue Zwerg::Error => e
   puts "Error: #{e.message}"
   exit 1
