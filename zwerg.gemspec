@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.email = ["yuuji.yaginuma@gmail.com"]
 
   spec.summary = "A configurable file watcher that executes commands based on YAML configuration."
-  spec.description = "Zwerg is a Ruby gem that watches for file changes and executes configurable shell commands based on YAML configuration files. It uses the watchcat gem for efficient file system monitoring and supports variable substitution in commands."
   spec.homepage = "https://github.com/y-yagi/zwerg"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
