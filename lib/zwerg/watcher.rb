@@ -47,7 +47,8 @@ module Zwerg
       watcher = Watchcat.watch(
         path,
         recursive: watch_config[:recursive],
-        wait_until_startup: true
+        wait_until_startup: true,
+        debounce: 1000
       ) do |event|
         handle_file_event(event, watch_config)
       end
