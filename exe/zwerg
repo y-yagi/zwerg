@@ -26,6 +26,7 @@ def show_help
         watches:
           - path: "./src"
             recursive: true
+            debounce: 500
             patterns:
               - "*.rb"
               - "*.yml"

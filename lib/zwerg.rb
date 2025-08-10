@@ -4,6 +4,7 @@ require_relative "zwerg/version"
 require_relative "zwerg/watcher"
 require_relative "zwerg/config"
 require_relative "zwerg/action_executor"
+require_relative "zwerg/debouncer"
 
 module Zwerg
   class Error < StandardError; end

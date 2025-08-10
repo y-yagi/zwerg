@@ -17,6 +17,7 @@ class TestZwerg < Minitest::Test
         watches:
           - path: "#{tmpdir}"
             recursive: true
+            debounce: 1000
             patterns:
               - "*.txt"
             actions:
@@ -29,6 +30,7 @@ class TestZwerg < Minitest::Test
       assert_equal 1, config.watches.length
       assert_equal tmpdir, config.watches.first[:path]
       assert_equal true, config.watches.first[:recursive]
+      assert_equal 1000, config.watches.first[:debounce]
       assert_equal ["*.txt"], config.watches.first[:patterns]
       assert_equal 1, config.watches.first[:actions].length
       assert config.watches.first[:actions].first.has_key?("command")
@@ -66,5 +68,45 @@ class TestZwerg < Minitest::Test
     assert_raises(Zwerg::Error) do
       Zwerg::Config.load("nonexistent.yml")
     end
+  end
+
+  def test_default_debounce_value
+    Dir.mktmpdir do |tmpdir|
+      config_file = File.join(tmpdir, "test_config.yml")
+
+      config_content = <<~YAML
+        watches:
+          - path: "#{tmpdir}"
+            actions:
+              - command: "echo 'Test'"
+      YAML
+
+      File.write(config_file, config_content)
+
+      config = Zwerg::Config.load(config_file)
+      assert_equal 500, config.watches.first[:debounce]  # Default value
+    end
+  end
+
+  def test_debouncer_functionality
+    debouncer = Zwerg::Debouncer.new
+    counter = 0
+
+    # Fire multiple debounced calls quickly
+    5.times do
+      debouncer.debounce("test_key", 100) do
+        counter += 1
+      end
+    end
+
+    # Should have 1 pending timer
+    assert_equal 1, debouncer.pending_count
+
+    # Wait for debounce to complete
+    sleep 0.15
+
+    # Should have executed only once
+    assert_equal 1, counter
+    assert_equal 0, debouncer.pending_count
   end
 end

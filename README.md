@@ -40,6 +40,7 @@ gem install zwerg
 watches:
   - path: "./src"
     recursive: true
+    debounce: 500
     patterns:
       - "*.rb"
       - "*.yml"
@@ -63,6 +64,7 @@ Each watch entry can have the following properties:
 
 - `path`: The file or directory to watch (required)
 - `recursive`: Whether to watch subdirectories (default: true)
+- `debounce`: Wait time in milliseconds before firing actions for the same file (default: 500)
 - `patterns`: Array of glob patterns to match files (optional, matches all if empty)
 - `actions`: Array of actions to execute when files change (required)
 
@@ -77,6 +79,32 @@ You can use any shell command, including complex operations with pipes, redirect
 ```yaml
 - command: "if [ -f {{file_path}} ]; then echo 'File exists: {{file_name}}' >> changes.log; fi"
 ```
+
+### Debounce Feature
+
+The debounce feature prevents actions from firing too frequently for the same file. When a file changes multiple times within the debounce period, only the last change will trigger the actions. This is implemented using Zwerg's built-in debouncer.
+
+```yaml
+- path: "./src"
+  debounce: 1000  # Wait 1000ms (1 second) before firing actions
+  actions:
+    - command: "echo 'File changed: {{file_path}}'"
+```
+
+**How it works:**
+- Each file path is tracked separately with its own debounce timer
+- When a file changes, any existing timer for that file is cancelled
+- A new timer is started for the specified debounce period
+- If the file changes again before the timer expires, the timer is reset
+- Actions only execute when the timer completes without interruption
+
+This is particularly useful for:
+- Files that are saved multiple times in quick succession by editors
+- Build processes that modify multiple files rapidly
+- Log files that are updated frequently
+- Preventing duplicate actions when files are modified in batches
+
+The debounce value is specified in milliseconds. If not specified, the default is 500ms.
 
 ### Variable Substitution
 

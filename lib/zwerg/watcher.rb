@@ -7,6 +7,7 @@ module Zwerg
     def initialize(config)
       @config = config
       @watchers = []
+      @debouncer = Debouncer.new
     end
 
     def start
@@ -28,6 +29,7 @@ module Zwerg
     end
 
     def stop
+      @debouncer.clear
       @watchers.each(&:stop)
       @watchers.clear
     end
@@ -42,13 +44,12 @@ module Zwerg
         return
       end
 
-      puts "Watching: #{path} (recursive: #{watch_config[:recursive]})"
+      puts "Watching: #{path} (recursive: #{watch_config[:recursive]}, debounce: #{watch_config[:debounce]}ms)"
 
       watcher = Watchcat.watch(
         path,
         recursive: watch_config[:recursive],
-        wait_until_startup: true,
-        debounce: 1000
+        wait_until_startup: true
       ) do |event|
         handle_file_event(event, watch_config)
       end
@@ -60,8 +61,12 @@ module Zwerg
       event.paths.each do |file_path|
         next unless should_process_file?(file_path, watch_config[:patterns])
 
-        puts "File changed: #{file_path}"
-        execute_actions(file_path, event, watch_config[:actions])
+        # Use debouncer to delay action execution
+        debounce_key = "#{watch_config[:path]}:#{file_path}"
+        @debouncer.debounce(debounce_key, watch_config[:debounce]) do
+          puts "File changed: #{file_path}"
+          execute_actions(file_path, event, watch_config[:actions])
+        end
       end
     end
 

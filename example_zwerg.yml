@@ -5,6 +5,7 @@ watches:
   # Watch a source directory for Ruby files
   - path: "./src"
     recursive: true
+    debounce: 300  # Wait 300ms before firing actions for the same file
     patterns:
       - "*.rb"
       - "*.yml"
@@ -15,6 +16,7 @@ watches:
   # Watch a documentation directory
   - path: "./docs"
     recursive: true
+    debounce: 1000  # Wait 1 second for documentation files
     patterns:
       - "*.md"
       - "*.txt"
@@ -25,6 +27,7 @@ watches:
   # Watch configuration files in the root directory
   - path: "."
     recursive: false
+    debounce: 2000  # Wait 2 seconds for config files (they might be edited multiple times)
     patterns:
       - "*.yml"
       - "*.yaml"
@@ -36,12 +39,20 @@ watches:
   # Watch for log files and compress them when they get large
   - path: "./logs"
     recursive: false
+    debounce: 5000  # Wait 5 seconds for log files (they change frequently)
     patterns:
       - "*.log"
     actions:
       - command: "if [ $(stat -c%s {{file_path}}) -gt 1048576 ]; then gzip {{file_path}}; fi"
 
 # Each action is a shell command that will be executed when files change
+#
+# Configuration options:
+# - path: Directory or file to watch (required)
+# - recursive: Watch subdirectories (default: true)
+# - debounce: Wait time in milliseconds before firing actions (default: 500ms)
+# - patterns: Glob patterns to match files (optional, matches all if empty)
+# - actions: Commands to execute when files change (required)
 
 # Available variables for substitution:
 # - {{file_path}}: Full path to the changed file

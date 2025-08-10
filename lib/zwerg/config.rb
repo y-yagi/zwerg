@@ -31,7 +31,8 @@ module Zwerg
           path: watch_config["path"],
           recursive: watch_config.fetch("recursive", true),
           patterns: watch_config["patterns"] || [],
-          actions: watch_config["actions"] || []
+          actions: watch_config["actions"] || [],
+          debounce: watch_config.fetch("debounce", 500)
         }
       end
     end
