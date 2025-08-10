@@ -38,15 +38,6 @@ module Zwerg
         .gsub("{{file_name}}", @file_name)
         .gsub("{{file_base}}", @file_base)
         .gsub("{{file_ext}}", @file_ext)
-        .gsub("{{event_type}}", determine_event_type)
-    end
-
-    def determine_event_type
-      return "create" if @event.kind.create?
-      return "modify" if @event.kind.modify?
-      return "remove" if @event.kind.remove?
-      return "access" if @event.kind.access?
-      "unknown"
     end
   end
 end

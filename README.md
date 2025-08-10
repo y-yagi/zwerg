@@ -87,7 +87,6 @@ The following variables can be used in action configurations:
 - `{{file_name}}`: Name of the file (including extension)
 - `{{file_base}}`: Name of the file without extension
 - `{{file_ext}}`: File extension (including the dot)
-- `{{event_type}}`: Type of event (create, modify, remove, access)
 
 ## Example Configuration
 

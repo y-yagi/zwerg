@@ -30,7 +30,7 @@ watches:
       - "*.yaml"
       - "*.json"
     actions:
-      - command: "echo '[{{event_type}}] Config file changed: {{file_name}}'"
+      - command: "echo 'Config file changed: {{file_name}}'"
       - command: "echo 'Config changed: {{file_path}}' | mail -s 'Config Alert' admin@example.com"
 
   # Watch for log files and compress them when they get large
@@ -49,4 +49,3 @@ watches:
 # - {{file_name}}: Name of the file (including extension)
 # - {{file_base}}: Name of the file without extension
 # - {{file_ext}}: File extension (including the dot)
-# - {{event_type}}: Type of event (create, modify, remove, access)

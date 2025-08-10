@@ -54,12 +54,11 @@ class TestZwerg < Minitest::Test
       executor = Zwerg::ActionExecutor.new(test_file, event)
 
       # Test variable substitution
-      template = "File: {{file_name}}, Dir: {{file_dir}}, Type: {{event_type}}"
+      template = "File: {{file_name}}, Dir: {{file_dir}}"
       result = executor.send(:substitute_variables, template)
 
       assert_includes result, "test.rb"
       assert_includes result, tmpdir
-      assert_includes result, "modify"
     end
   end
 
