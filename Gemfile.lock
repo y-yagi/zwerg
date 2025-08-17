@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    zwerg (0.1.1)
+    zwerg (0.1.2)
       psych (~> 5.0)
       watchcat (~> 0.3.0)
 
